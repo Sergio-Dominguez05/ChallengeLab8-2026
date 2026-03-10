@@ -12,12 +12,14 @@
 // =============================================================================
 
 import type React from 'react';
+import { useState } from 'react';
 import { Routes, Route, Link } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { Home, Building2 } from 'lucide-react';
 import { HomePage } from '@/pages/HomePage';
 import { NewPropertyPage } from '@/pages/NewPropertyPage';
 import { PropertyDetailPage } from '@/pages/PropertyDetailPage';
+import { ComparePage } from '@/pages/ComparePage';
 
 /**
  * Componente principal de la aplicación.
@@ -28,6 +30,18 @@ import { PropertyDetailPage } from '@/pages/PropertyDetailPage';
  * - Footer con créditos
  */
 function App(): React.ReactElement {
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+
+  const toggleCompare = (id: string): void => {
+    if (compareIds.includes(id)) {
+      setCompareIds(compareIds.filter((item) => item !== id));
+      return;
+    }
+
+    if (compareIds.length < 3) {
+      setCompareIds([...compareIds, id]);
+    }
+  };
   return (
     <>
       {/* Toaster para notificaciones - fuera del layout para evitar problemas de z-index */}
@@ -39,13 +53,12 @@ function App(): React.ReactElement {
           =================================================================== */}
         <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
           <div className="container mx-auto flex h-16 items-center px-4">
-            {/* Logo y nombre */}
+            {/**Titulo */}
             <Link to="/" className="flex items-center gap-2 font-bold text-xl">
               <Building2 className="h-6 w-6 text-primary" />
               <span>RealEstate</span>
             </Link>
-
-            {/* Navegación */}
+            {/** Navegacion */}
             <nav className="ml-auto flex items-center gap-4">
               <Link
                 to="/"
@@ -54,8 +67,16 @@ function App(): React.ReactElement {
                 <Home className="h-4 w-4" />
                 Inicio
               </Link>
+
+              <Link
+                to="/compare"
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Comparar ({compareIds.length})
+              </Link>
             </nav>
           </div>
+        </header>
         </header>
 
         {/* ===================================================================
@@ -66,26 +87,36 @@ function App(): React.ReactElement {
           =================================================================== */}
         <main className="flex-1">
           <Routes>
-            {/* Página principal - Lista de propiedades */}
-            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/"
+              element={
+                <HomePage
+                  compareIds={compareIds}
+                  onToggleCompare={toggleCompare}
+                />
+              }
+            />
 
-            {/* Página para crear nueva propiedad */}
             <Route path="/new" element={<NewPropertyPage />} />
-
-            {/* Página de detalle de propiedad */}
             <Route path="/property/:id" element={<PropertyDetailPage />} />
 
-            {/* Ruta 404 - Página no encontrada */}
+            <Route
+              path="/compare"
+              element={
+                <ComparePage
+                  compareIds={compareIds}
+                  onToggleCompare={toggleCompare}
+                />
+              }
+            />
+
             <Route
               path="*"
               element={
                 <div className="container mx-auto px-4 py-16 text-center">
                   <h1 className="text-4xl font-bold mb-4">404</h1>
                   <p className="text-muted-foreground mb-6">Página no encontrada</p>
-                  <Link
-                    to="/"
-                    className="text-primary hover:underline"
-                  >
+                  <Link to="/" className="text-primary hover:underline">
                     Volver al inicio
                   </Link>
                 </div>
@@ -99,17 +130,12 @@ function App(): React.ReactElement {
           =================================================================== */}
         <footer className="border-t py-6 mt-auto">
           <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-            <p>
-              Portal Inmobiliario - Módulo 2 del Curso de Desarrollo Web
-            </p>
-            <p className="mt-1">
-              Desarrollado con React 19, Tailwind CSS y Shadcn UI
-            </p>
+            <p>Portal Inmobiliario - Módulo 2 del Curso de Desarrollo Web</p>
+            <p className="mt-1">Desarrollado con React 19, Tailwind CSS y Shadcn UI</p>
           </div>
         </footer>
       </div>
     </>
   );
 }
-
 export default App;

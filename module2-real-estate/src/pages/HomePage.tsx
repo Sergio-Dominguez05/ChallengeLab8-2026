@@ -34,10 +34,18 @@ import {
   OPERATION_TYPE_LABELS,
 } from '@/types/property';
 
+interface HomePageProps {
+  compareIds: string[];
+  onToggleCompare: (id: string) => void;
+}
+
 /**
  * Página principal con lista de propiedades y filtros.
  */
-export function HomePage(): React.ReactElement {
+export function HomePage({
+  compareIds,
+  onToggleCompare,
+}: HomePageProps): React.ReactElement {
   // =========================================================================
   // ESTADO
   // =========================================================================
@@ -125,12 +133,20 @@ export function HomePage(): React.ReactElement {
           </p>
         </div>
 
-        <Button asChild>
-          <Link to="/new">
-            <Plus className="h-4 w-4 mr-2" />
-            Nueva Propiedad
-          </Link>
-        </Button>
+        <div className="flex gap-2">
+          <Button asChild variant="outline">
+            <Link to="/compare">
+              Comparar ({compareIds.length})
+            </Link>
+          </Button>
+
+          <Button asChild>
+            <Link to="/new">
+              <Plus className="h-4 w-4 mr-2" />
+              Nueva Propiedad
+            </Link>
+          </Button>
+        </div>
       </div>
 
       {/* Filtros */}
@@ -243,6 +259,8 @@ export function HomePage(): React.ReactElement {
               key={property.id}
               property={property}
               onDelete={handleDelete}
+              isSelectedForCompare={compareIds.includes(property.id)}
+              onToggleCompare={onToggleCompare}
             />
           ))}
         </div>
