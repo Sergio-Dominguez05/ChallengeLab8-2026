@@ -21,6 +21,8 @@ import { NewPropertyPage } from '@/pages/NewPropertyPage';
 import { PropertyDetailPage } from '@/pages/PropertyDetailPage';
 import { ComparePage } from '@/pages/ComparePage';
 
+//Aqui agregue los imports de useState y de React
+
 /**
  * Componente principal de la aplicación.
  *
@@ -32,15 +34,23 @@ import { ComparePage } from '@/pages/ComparePage';
 function App(): React.ReactElement {
   const [compareIds, setCompareIds] = useState<string[]>([]);
 
+  //Este estado de aqui lo que hace es hacer que los IDs se guarden con las propiedades
+  //Con las que se seleccionaron, para eso usa un State
+
   const toggleCompare = (id: string): void => {
-    if (compareIds.includes(id)) {
-      setCompareIds(compareIds.filter((item) => item !== id));
+
+    //Esta funcion lo que hace en resumidas cuentas es:
+    if (compareIds.includes(id)) { //Si el ID ya esta...
+      setCompareIds(compareIds.filter((item) => item !== id));  //Entonces que lo quite
       return;
     }
 
-    if (compareIds.length < 3) {
-      setCompareIds([...compareIds, id]);
-    }
+    //Si el ID no esta...
+
+    if (compareIds.length < 3) { //Verificar que hayan menos de 3 porque eso es el limite 
+      //Nota: 3 es el limite de cuantas se pueden comparar a la vez
+      setCompareIds([...compareIds, id]); //Si hay menos de 3 entonces lo agrega
+    }// Si no hay menos de 3 entonces no hace nada
   };
   return (
     <>
@@ -93,7 +103,7 @@ function App(): React.ReactElement {
                 <HomePage
                   compareIds={compareIds}
                   onToggleCompare={toggleCompare}
-                />
+                />  {/**Esto de aqui lo que hace es pasar los props a la Home Page con una ruta */}
               }
             />
 
@@ -108,7 +118,9 @@ function App(): React.ReactElement {
                   onToggleCompare={toggleCompare}
                 />
               }
-            />
+            /> {/**Aqui agrego la ruta compare, osea lo que hace que comparePage se renderize
+            Mediante el React Router, que basicamente react lo que hace es interceptar el link
+            para poder cambiar de pestaña sin actualizar el navegador */}
 
             <Route
               path="*"

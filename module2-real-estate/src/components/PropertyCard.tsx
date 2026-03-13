@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 import { BedDouble, Bath, Square, MapPin, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { CompareButton } from '@/components/CompareButton';
+import { CompareButton } from '@/components/CompareButton'; //Importo el boton para comparar
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import type { Property } from '@/types/property';
 import {
@@ -34,13 +34,16 @@ interface PropertyCardProps {
   onToggleCompare: (id: string) => void;
 }
 
+//Aqui agregamos los campos, isSelectedForCompare y onToggleCompare para que todo caze con lo
+//Que pusimos en HomePage y las propiedades puedan ser comparables
+
 /**
  * Tarjeta visual de una propiedad.
  */
 export function PropertyCard({
   property,
   onDelete,
-  isSelectedForCompare,
+  isSelectedForCompare,//Aqui lo unico es recibir los props en el componente
   onToggleCompare,
 }: PropertyCardProps): React.ReactElement {
   return (
@@ -116,7 +119,9 @@ export function PropertyCard({
 
       <CardFooter className="flex flex-wrap gap-2">
         <CompareButton
-          isSelected={isSelectedForCompare}
+          isSelected={isSelectedForCompare} //Aqui lo que agregamos es un boton que este a la par
+          //De los botones de Ver detalles y eliminar para que podamos comparar, logicamente,
+          //Verificamos que sea comparable
           onClick={() => onToggleCompare(property.id)}
         />
 

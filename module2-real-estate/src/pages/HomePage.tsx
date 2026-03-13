@@ -39,6 +39,8 @@ interface HomePageProps {
   onToggleCompare: (id: string) => void;
 }
 
+//Aqui cambio el HomePageProps para que reciba los props que previamente defini en App.tsx
+
 /**
  * Página principal con lista de propiedades y filtros.
  */
@@ -46,6 +48,9 @@ export function HomePage({
   compareIds,
   onToggleCompare,
 }: HomePageProps): React.ReactElement {
+
+  //Hago lo mismo aqui, para que se reciban compareIds y onToggleCompare
+  
   // =========================================================================
   // ESTADO
   // =========================================================================
@@ -139,6 +144,12 @@ export function HomePage({
               Comparar ({compareIds.length})
             </Link>
           </Button>
+
+          {/**En el Header hay un boton que dice "Nueva Propiedad", lo que yo hice fue 
+           * poner otro boton a la par de este para que se pueda ir directamente a comparar
+           * Entonces ya es posible ir directamente a comparar sin tener que hacer todo el proceso
+           * por App.tsx
+           */}
 
           <Button asChild>
             <Link to="/new">
@@ -254,13 +265,22 @@ export function HomePage({
       {/* Lista de propiedades */}
       {properties.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {properties.map((property) => (
-            <PropertyCard
-              key={property.id}
-              property={property}
-              onDelete={handleDelete}
-              isSelectedForCompare={compareIds.includes(property.id)}
-              onToggleCompare={onToggleCompare}
+          {properties.map((property) => ( //Esto de aqui es el arreglo de propiedades
+            <PropertyCard // Osea algo como "p1", "Apartamento en Zona 10"
+              key={property.id} //Esto de aqui es el identificador para React
+              property={property} //Esto pasa el objeto de la propiedad al componente
+              //Sirve pasar el objeto de la propiedad al componente para hacer cosas como
+              // porperty.title, property.price, property.bedrooms, etc.
+              onDelete={handleDelete} //Esto es el boton para borrar la propiedad desde 
+              //Homepage
+              isSelectedForCompare={compareIds.includes(property.id)} //Esto lo que hace es
+              //Revisa si la propiedad esta en el arreglo compareIds para saber si es comparable
+              // Esto sirve para saber si el boton debe decir Comparar o Quitar
+              onToggleCompare={onToggleCompare} //Esto sirve para que la propiedad se pueda
+              //agregar al arreglo compareId y entonces sea comparable
+
+              //En resumen, los cambios sirven para ver si la propiedad esta seleccionada para
+              //comparar, o si la quiero agregar o quitar de la comparacion
             />
           ))}
         </div>
